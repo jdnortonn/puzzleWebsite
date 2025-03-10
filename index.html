@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href="style.css">
+    <title>Puzzle Game</title>
+</head>
+<body>
+    <H2>Puzzle Game</H2>
+    <div class="hub">
+   <div class = "container">
+    <div class="top-content">
+        <div id="turnCounter">Counter: 0</div>
+        <div id="timer">Timer: 0s</div>
+    </div>
+    <div class="spacer"></div> 
+    <button   onClick="shuffle();">New Game</button>
+    <button  onClick="simpleShuffle();">Simple</button>
+    <button onClick="resetGame();">Reset</button>
+   </div>
+   <div id="winScreen">
+    <h1>You Win!</h1>
+    <button onclick="closeWinScreen()">Close</button>
+</div>
+    <table id="playboard">
+        <tr id='row1'>
+            <td playable='false' id='1' class="tile1" onclick="tileClick('1')">1</td>
+            <td playable='false' class="tile2" id='2' onclick="tileClick('2')">2</td>
+            <td playable='false' class="tile3" id='3' onclick="tileClick('3')" >3</td>
+            <td playable='false' class="tile4" id='4' onclick="tileClick('4')">4</td>
+        </tr>
+        <tr id='row2'>
+            <td playable='false' class="tile5" id='5' onclick="tileClick('5')">5</td>
+            <td playable='false' class="tile6" id='6' onclick="tileClick('6')">6</td>
+            <td playable='false' class="tile7" id='7' onclick="tileClick('7')">7</td>
+            <td playable='false' class="tile8" id='8' onclick="tileClick('8')">8</td>
+        </tr>
+        <tr id='row3'>
+            <td playable='false' class="tile9" id='9' onclick="tileClick('9')">9</td>
+            <td playable='false' class="tile10" id='10' onclick="tileClick('10')">10</td>
+            <td playable='false' class="tile11" id='11' onclick="tileClick('11')">11</td>
+            <td playable='false' class="tile12" id='12' onclick="tileClick('12')">12</td>
+        </tr>
+        <tr id='row4'>
+            <td playable='false' class="tile13" id='13' onclick="tileClick('13')">13</td>
+            <td playable='false' class="tile14" id='14' onclick="tileClick('14')">14</td>
+            <td playable='false' class="tile15" id='15' onclick="tileClick('15')">15</td>
+            <td playable='false' class="tile16" id='16' onclick="tileClick('16')" style="background-color: linear-gradient(270deg,rgb(21, 18, 28),rgb(10, 8, 8));"></td>
+        </tr>
+    </table>
+</div>
+    
+
+    <script>
+
+function showWinScreen() {
+    document.getElementById("winScreen").style.display = "block";
+}
+
+function closeWinScreen() {
+    document.getElementById("winScreen").style.display = "none";
+}
+    // Timer Variables
+    let timer = 0;
+    let timerInterval;
+    
+    // Counter Variable
+    window.counter = 0;
+
+    // Start the timer automatically
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timer++;
+            document.getElementById("timer").innerText = "Timer: " + timer + "s";
+        }, 1000);
+    }
+
+    // Call startTimer on page load to start the timer automatically
+    window.onload = function() {
+        startTimer();
+    };
+
+    // Reset the game
+    function resetGame() {
+        // Reset the counter
+        window.counter = 0;
+        document.getElementById("turnCounter").innerText = "Counter: 0";
+
+        // Reset the timer
+        timer = 0;
+        document.getElementById("timer").innerText = "Timer: 0s";
+
+        // Reset the board
+        let initialPositions = [
+            "tile1", "tile2", "tile3", "tile4", "tile5", "tile6", "tile7", "tile8", "tile9", "tile10", "tile11", "tile12", "tile13", "tile14", "tile15", "tile16"
+        ];
+
+        let count = 1;
+        let userBoard = document.getElementById('playboard');
+
+        // Loop through each cell and restore the initial class names and content
+        for (var i = 0; i < userBoard.rows.length; i++) {
+            var row = userBoard.rows[i];
+            for (var j = 0; j < row.cells.length; j++) {
+                var cell = row.cells[j];
+                if (cell.id !== "16") {
+                    cell.className = initialPositions[count - 1];
+                    cell.innerHTML = count;
+                    cell.style.backgroundColor = "";
+                    count++;
+                } else {
+                    cell.className = "tile16"; // Empty tile
+                    cell.innerHTML = ""; // Empty space
+                     // Set the style back to the original blank space style
+                }
+            }
+        }
+
+        console.log("Game reset");
+    }
+
+    // Shuffle function
+    function shuffle() {
+        resetGame();
+        window.counter = 0;
+        for (let count = 1; count < 16; count++) {
+            let num = Math.floor(Math.random() * 16 + 1);
+            swapTiles(count, num);
+        }
+        console.log("Shuffle complete");
+    }
+
+    // Simple shuffle function
+    function simpleShuffle() {
+        resetGame();
+        swapTiles(12, 16);
+        console.log("Shuffle complete");
+    }
+
+    // Swap tiles function
+    function swapTiles(c1, c2) {
+        var cell1 = document.getElementById(c1);
+        var cell2 = document.getElementById(c2);
+
+        var temp = cell1.innerHTML;
+        cell1.innerHTML = cell2.innerHTML;
+        cell2.innerHTML = temp;
+
+        var tempClass = cell1.className;
+        cell1.className = cell2.className;
+        cell2.className = tempClass;
+
+        var tempStyle = cell1.style.cssText;
+        cell1.style.cssText = cell2.style.cssText;
+        cell2.style.cssText = tempStyle; 
+        // create the left,right,bottom,top otions for
+        //blank tile and then give it true tag to highlight moves
+        console.log(cell1.id);
+        console.log(cell2.id);
+        console.log("Swapped", c1, "and", c2);
+    }
+
+    // Tile click function
+    function tileClick(selectCell) {
+        var selectObj = document.getElementById(selectCell);
+        var blankObj = document.getElementsByClassName('tile16')[0]; // Find the blank tile
+        console.log(blankObj);
+
+        if (!selectObj || !blankObj) {
+            console.error("Invalid tile selection");
+            return;
+        }
+
+        var adjacentCells = [
+            (parseInt(selectCell) - 1).toString(), // Left
+            (parseInt(selectCell) + 1).toString(), // Right
+            (parseInt(selectCell) - 4).toString(), // Above
+            (parseInt(selectCell) + 4).toString()  // Below
+        ];
+        
+        if (adjacentCells.includes(blankObj.id)) {
+            swapTiles(selectObj.id, blankObj.id);
+            counter++;
+            document.getElementById("turnCounter").innerText = "Counter: " + counter;
+            checkWin();
+        }
+    }
+
+    // Check for win condition
+    function checkWin() {
+        var answerString = ["tile1", "tile2", "tile3", "tile4", "tile5", "tile6", "tile7", "tile8", "tile9", "tile10", "tile11", "tile12", "tile13", "tile14", "tile15", "tile16"];
+        var userBoard = document.getElementById('playboard');
+        var tiles = [];
+
+        for (var i = 0; i < userBoard.rows.length; i++) {
+            var row = userBoard.rows[i];
+            for (var j = 0; j < row.cells.length; j++) {
+                var cell = row.cells[j];
+                if (cell.id == "16") {
+                    tiles.push("tile16"); // For the empty cell
+                } else {
+                    tiles.push(cell.className);
+                }
+            }
+        }
+
+        var check = true;
+        for (var i = 0; i < answerString.length; i++) {
+            if (answerString[i] !== tiles[i]) {
+                check = false;
+                break;
+            }
+        }
+
+        if (check) {
+            showWinScreen();
+            
+            // Optionally reset the timer here if you want
+            timer = 0;
+            document.getElementById("timer").innerText = "Timer: 0 seconds";
+        } else {
+            console.log("Game not won yet.");
+        }
+    }
+
+    </script>
+</body>
+</html>
