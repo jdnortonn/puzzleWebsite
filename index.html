@@ -110,9 +110,9 @@ function closeWinScreen() {
                     cell.style.backgroundColor = "";
                     count++;
                 } else {
-                    cell.className = "tile16"; // Empty tile
-                    cell.innerHTML = ""; // Empty space
-                     // Set the style back to the original blank space style
+                    cell.className = "tile16"; 
+                    cell.innerHTML = ""; 
+                     
                 }
             }
         }
@@ -164,7 +164,7 @@ function closeWinScreen() {
     // Tile click function
     function tileClick(selectCell) {
         var selectObj = document.getElementById(selectCell);
-        var blankObj = document.getElementsByClassName('tile16')[0]; // Find the blank tile
+        var blankObj = document.getElementsByClassName('tile16')[0]; 
         console.log(blankObj);
 
         if (!selectObj || !blankObj) {
@@ -198,7 +198,7 @@ function closeWinScreen() {
             for (var j = 0; j < row.cells.length; j++) {
                 var cell = row.cells[j];
                 if (cell.id == "16") {
-                    tiles.push("tile16"); // For the empty cell
+                    tiles.push("tile16"); 
                 } else {
                     tiles.push(cell.className);
                 }
@@ -216,7 +216,7 @@ function closeWinScreen() {
         if (check) {
             showWinScreen();
             
-            // Optionally reset the timer here if you want
+            
             timer = 0;
             document.getElementById("timer").innerText = "Timer: 0 seconds";
         } else {
